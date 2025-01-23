@@ -1,5 +1,5 @@
 module vsm #(
-    SIZE = 6,
+    SIZE = 6
 ) (
     input wire clk,
     input wire reset,
