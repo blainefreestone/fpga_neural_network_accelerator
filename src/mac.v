@@ -1,6 +1,6 @@
 module mac (
     input reset, clk,
-    input [7:0] a, b, 
+    input wire [7:0] a, b, 
     output reg [23:0] out
 );
     reg [15:0] product_reg;
