@@ -1,5 +1,7 @@
 module vsm #(
-    SIZE = 6
+    parameter SIZE = 6,
+    parameter WIDTH = 8,
+    parameter ACCUMULATIONS = 3
 ) (
     input wire clk,
     input wire reset,
@@ -11,7 +13,10 @@ module vsm #(
     genvar i;
     generate
         for (i = 0; i < SIZE; i = i + 1) begin : mac_gen
-            mac mac_i (
+            mac mac_i #(
+                .WIDTH(WIDTH),
+                .ACCUMULATIONS(ACCUMULATIONS)
+            ) (
                 .reset(reset),
                 .clk(clk),
                 .a(a[8 * i +: 8]),
