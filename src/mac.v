@@ -1,3 +1,4 @@
+// multiplier accumulator
 module mac #(
     parameter WIDTH = 8,            // determines the width of the inputs
     parameter ACCUMULATIONS = 3     // determines the number of accumulations will fit in the output (in the worst case)

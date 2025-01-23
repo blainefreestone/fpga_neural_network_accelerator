@@ -1,3 +1,4 @@
+// vector scaler multiplier
 module vsm #(
     parameter SIZE = 6,
     parameter WIDTH = 8,
