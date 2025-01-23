@@ -55,6 +55,26 @@ module mac_tb;
         b = 8'd50;
         #10;
 
+        // Apply reset
+        reset = 1;
+        a = 0;
+        b = 0;
+        #10;
+        reset = 0;
+
+        // Test vector 5
+        a = 8'd200;
+        b = 8'd100;
+        #10;
+
+        // Test vector 6
+        a = 8'd255;
+        b = 8'd200;
+        #10;
+
+        // Apply reset
+        reset = 0;
+
         // Finish simulation
         #100;
         $finish;
