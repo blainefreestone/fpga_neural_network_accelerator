@@ -3,11 +3,13 @@
 module test_vsm;
 
     // Parameters
-    localparam SIZE = 6;
+    localparam SIZE = 3;
+    localparam WIDTH = 16;
 
     // Inputs
     reg clk;
     reg reset;
+    reg enable;
     reg [8 * SIZE-1:0] a;
     reg [7:0] b;
 
@@ -20,6 +22,7 @@ module test_vsm;
     ) uut (
         .clk(clk),
         .reset(reset),
+        .enable(enable),
         .a(a),
         .b(b),
         .out(out)
@@ -38,65 +41,35 @@ module test_vsm;
         // Wait for global reset
         #10;
         
-        // Test vector 1
+        // Test vector 1 (with reset)
+        // vector = [0x01, 0x04, 0x07]
+        // scalar = 0x01
+        // output should be [0x01, 0x04, 0x07]
         reset = 1;
         #10;
         reset = 0;
-        a = 48'h010203040506;
-        b = 8'hFF;
-        #20;
-
-        // Test vector 2
-        reset = 1;
+        a = 24'h010407;
+        b = 8'h01;
         #10;
-        reset = 0;
-        a = 48'hA1B2C3D4E5F6;
-        b = 8'h0F;
-        #20;
+        $display("Test vector 1: output = %h, expected = 010407, %s", out, (out == 24'h010407) ? "PASS" : "FAIL");
 
-        a = 48'h123456789ABC;
-        b = 8'hAA;
-        #20;
-
-        // Test vector 3
-        reset = 1;
+        // Test vector 2 (with accumulation)
+        // vector = [0x02, 0x05, 0x08]
+        // scalar = 0x02
+        // output should be [0x05, 0x0E, 0x17]
+        a = 24'h020508;
+        b = 8'h02;
         #10;
-        reset = 0;
-        a = 48'hFEDCBA987654;
-        b = 8'h55;
-        #20;
+        $display("Test vector 2: output = %h, expected = 050E17, %s", out, (out == 24'h050E17) ? "PASS" : "FAIL");
 
-        a = 48'h000000000000;
-        b = 8'hFF;
-        #20;
-
-        // Test vector 4
-        reset = 1;
+        // Test vector 3 (with accumulation)
+        // vector = [0x03, 0x06, 0x09]
+        // scalar = 0x03
+        // output should be [0x0E, 0x20, 0x32]
+        a = 24'h030609;
+        b = 8'h03;
         #10;
-        reset = 0;
-        a = 48'h112233445566;
-        b = 8'h33;
-        #20;
-
-        a = 48'hAABBCCDDEEFF;
-        b = 8'h77;
-        #20;
-
-        // Test vector 5
-        reset = 1;
-        #10;
-        reset = 0;
-        a = 48'h000000000000;
-        b = 8'hFF;
-        #20;
-
-        // Test vector 6
-        reset = 1;
-        #10;
-        reset = 0;
-        a = 48'hFFFFFFFFFFFF;
-        b = 8'h00;
-        #20;
+        $display("Test vector 3: output = %h, expected = 0E2032, %s", out, (out == 24'h0E2032) ? "PASS" : "FAIL");
 
         // Finish simulation
         $finish;

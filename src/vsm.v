@@ -4,11 +4,10 @@ module vsm #(
     parameter WIDTH = 8,
     parameter ACCUMULATIONS = 3
 ) (
-    input wire clk,
-    input wire reset,
+    input wire reset, clk, enable
     input wire [8 * SIZE-1:0] a,
     input wire [7:0] b,
-    output wire [8 * SIZE-1:0] out
+    output reg [8 * SIZE-1:0] out
 );
 
     genvar i;
@@ -20,6 +19,7 @@ module vsm #(
             ) (
                 .reset(reset),
                 .clk(clk),
+                .enable(enable),
                 .a(a[8 * i +: 8]),
                 .b(b),
                 .out(out[8 * i +: 8])
