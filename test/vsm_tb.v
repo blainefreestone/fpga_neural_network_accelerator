@@ -35,6 +35,7 @@ module test_vsm;
         // Initialize Inputs
         clk = 0;
         reset = 0;
+        enable = 0;
         a = 0;
         b = 0;
 
@@ -48,11 +49,10 @@ module test_vsm;
         reset = 1;
         #10;
         reset = 0;
+        enable = 1;
         a = 24'h010407;
         b = 8'h01;
         #10;
-        $display("Test vector 1: output = %h, expected = 010407, %s", out, (out == 24'h010407) ? "PASS" : "FAIL");
-
         // Test vector 2 (with accumulation)
         // vector = [0x02, 0x05, 0x08]
         // scalar = 0x02
@@ -60,7 +60,6 @@ module test_vsm;
         a = 24'h020508;
         b = 8'h02;
         #10;
-        $display("Test vector 2: output = %h, expected = 050E17, %s", out, (out == 24'h050E17) ? "PASS" : "FAIL");
 
         // Test vector 3 (with accumulation)
         // vector = [0x03, 0x06, 0x09]
@@ -69,7 +68,21 @@ module test_vsm;
         a = 24'h030609;
         b = 8'h03;
         #10;
+        $display("Test vector 1: output = %h, expected = 010407, %s", out, (out == 24'h010407) ? "PASS" : "FAIL");
+        
+        // wait for propogation delay
+        a = 0;
+        b = 0;
+        #10
+
+        $display("Test vector 2: output = %h, expected = 050E17, %s", out, (out == 24'h050E17) ? "PASS" : "FAIL");
+
+        #10
+
         $display("Test vector 3: output = %h, expected = 0E2032, %s", out, (out == 24'h0E2032) ? "PASS" : "FAIL");
+        enable = 0;
+        
+        #10
 
         // Finish simulation
         $finish;
