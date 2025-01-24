@@ -5,6 +5,7 @@ module mac_tb;
     // Testbench signals
     reg clk;
     reg reset;
+    reg enable;
     reg [7:0] a;
     reg [7:0] b;
     wire [23:0] out;
@@ -13,6 +14,7 @@ module mac_tb;
     mac uut (
         .reset(reset),
         .clk(clk),
+        .enable(enable),
         .a(a),
         .b(b),
         .out(out)
@@ -28,6 +30,7 @@ module mac_tb;
     initial begin
         // Initialize inputs
         reset = 1;
+        enable = 0;
         a = 0;
         b = 0;
 
@@ -36,6 +39,7 @@ module mac_tb;
         reset = 0;
 
         // Test vector 1
+        enable = 1;
         a = 8'd15;
         b = 8'd10;
         #10;
@@ -46,11 +50,13 @@ module mac_tb;
         #10;
 
         // Test vector 3
+        enable = 0; // Disable MAC
         a = 8'd50;
         b = 8'd30;
         #10;
 
         // Test vector 4
+        enable = 1; // Enable MAC
         a = 8'd100;
         b = 8'd50;
         #10;
@@ -63,6 +69,7 @@ module mac_tb;
         reset = 0;
 
         // Test vector 5
+        enable = 1;
         a = 8'd200;
         b = 8'd100;
         #10;
@@ -82,7 +89,7 @@ module mac_tb;
 
     // Monitor the output
     initial begin
-        $monitor("At time %t, a = %d, b = %d, out = %d", $time, a, b, out);
+        $monitor("At time %t, a = %d, b = %d, out = %d, enable = %b", $time, a, b, out, enable);
     end
 
 endmodule
