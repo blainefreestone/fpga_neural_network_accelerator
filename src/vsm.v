@@ -4,7 +4,7 @@ module vsm #(
     parameter WIDTH = 8,
     parameter ACCUMULATIONS = 3
 ) (
-    input wire reset, clk, enable
+    input wire reset, clk, enable,
     input wire [8 * SIZE-1:0] a,
     input wire [7:0] b,
     output reg [8 * SIZE-1:0] out

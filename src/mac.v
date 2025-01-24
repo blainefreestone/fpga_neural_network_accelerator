@@ -3,7 +3,7 @@ module mac #(
     parameter WIDTH = 8,            // determines the width of the inputs
     parameter ACCUMULATIONS = 3     // determines the number of accumulations will fit in the output (in the worst case)
 ) (
-    input wire reset, clk, enable
+    input wire reset, clk, enable,
     input wire [WIDTH - 1:0] a, b,
     output reg [WIDTH + $clog2(ACCUMULATIONS) - 1:0] out    // the output width is the sum of the input widths plus extra bits for accumulations
 );
