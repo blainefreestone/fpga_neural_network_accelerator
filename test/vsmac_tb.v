@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module test_vsm;
+module test_vsmac;
 
     // Parameters
     localparam SIZE = 3;
@@ -17,7 +17,7 @@ module test_vsm;
     wire [8 * SIZE-1:0] out;
 
     // Instantiate the Unit Under Test (UUT)
-    vsm #(
+    vsmac #(
         .SIZE(SIZE)
     ) uut (
         .clk(clk),

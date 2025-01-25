@@ -1,5 +1,5 @@
-// vector scaler multiplier
-module vsm #(
+// vector scaler multiplier accumulator
+module vsmac #(
     parameter SIZE = 6,
     parameter WIDTH = 8,
     parameter ACCUMULATIONS = 3
@@ -7,10 +7,12 @@ module vsm #(
     input wire reset, clk, enable,
     input wire [8 * SIZE-1:0] a,
     input wire [7:0] b,
-    output reg [8 * SIZE-1:0] out
+    output reg [8 * SIZE-1:0] out,
+    output wire done
 );
 
     wire [8 * SIZE-1:0] cur_out;
+    reg [$clog2(ACCUMULATIONS * 2) - 1:0] accumulation_counter;
 
     genvar i;
     generate
@@ -32,9 +34,13 @@ module vsm #(
     always @(negedge clk or negedge reset) begin
         if (reset) begin
             out <= 0;
+            accumulation_counter <= 0;
         end else if (enable) begin
+            accumulation_counter <= accumulation_counter + 1;
             out <= cur_out;
         end
     end
+
+    assign done = (accumulation_counter == ACCUMULATIONS * 2 - 1);
     
 endmodule
