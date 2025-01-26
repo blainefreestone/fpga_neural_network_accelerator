@@ -17,7 +17,7 @@ module mac #(
 
     // connect quantizer input to the sum
     assign quantize_in = sum_reg;
-
+    
     // instantiate the quantizer
     quantize #(
         .WIDTH_IN(2 * WIDTH + $clog2(ACCUMULATIONS)),
