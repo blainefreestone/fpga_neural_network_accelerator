@@ -32,7 +32,7 @@ module vsmac #(
         end
     endgenerate
 
-    always @(negedge clk or negedge reset) begin
+    always @(negedge clk or posedge reset) begin
         if (reset) begin
             out <= 0;
             accumulation_counter <= 0;
