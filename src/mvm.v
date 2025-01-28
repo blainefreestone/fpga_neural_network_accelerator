@@ -1,12 +1,12 @@
 // matrix vector multiplier
 module mvm #(
     parameter MATRIX_ROWS = 6,      // determines the number of ROWS in the matrix
-    parameter SHARED_DIM = 3        // determines the number of columns in the matrix and rows in the vector
+    parameter SHARED_DIM = 3,       // determines the number of columns in the matrix and rows in the vector
     parameter WIDTH = 8             // determines the width of data inside the matrix and the vector
 ) (
-    input wire clk, reset, start
+    input wire clk, reset, start,
     input wire [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] matrix,
-    input wire [MATRIX_ROWS - 1:0] vector
+    input wire [MATRIX_ROWS - 1:0] vector,
     output reg [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] result_vector
 );
 
@@ -17,27 +17,25 @@ module mvm #(
     wire vsmac_done;                        // done signal from the vector scalar multiplier
 
     // vector scalar multiplier with proper parameters
-    vsmac u_vsm #(
+    vsmac #(
         .SIZE(MATRIX_ROWS),
         .WIDTH(WIDTH),
         .ACCUMULATIONS(SHARED_DIM)
-    ) (
+    ) u_vsm (
         .clk(clk),
         .reset(reset),
         .a(a),
-        .b(b)
+        .b(b),
         .out(out),
         .done(vsmac_done)
-    )
+    );
 
     // define states for state machine
-    typedef enum logic [1:0] {
-        IDLE,
-        CALCULATE,
-        DONE
-    } state_t;
+    parameter IDLE = 2'b00;
+    parameter CALCULATE = 2'b01;
+    parameter DONE = 2'b10;
 
-    state_t current_state, next_state;
+    reg [1:0] current_state, next_state;
 
     // state register
     always @(posedge clk or posedge reset) begin
@@ -84,21 +82,21 @@ module mvm #(
         endcase
     end
 
-    // output logic
-    always @(*) begin
-        case (current_state)
-            IDLE: begin
-                done = 0;
-            end
-            CALCULATE: begin
-                done = 0;
-            end
-            DONE: begin
-                done = 1;
-                // handle output
-            end
-            default: 
-        endcase
-    end
+    // // output logic
+    // always @(*) begin
+    //     case (current_state)
+    //         IDLE: begin
+    //             done = 0;
+    //         end
+    //         CALCULATE: begin
+    //             done = 0;
+    //         end
+    //         DONE: begin
+    //             done = 1;
+    //             // handle output
+    //         end
+    //         default: 
+    //     endcase
+    // end
 
 endmodule
