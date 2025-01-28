@@ -40,7 +40,7 @@ module test_vsmac;
         b = 0;
 
         // Wait for global reset
-        #10;
+        #110;
         
         // Test 1: 3 vectors, with enable
         // Test vector 1 (with reset)
