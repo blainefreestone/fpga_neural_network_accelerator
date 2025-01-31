@@ -5,13 +5,13 @@ module vsmac #(
     parameter ACCUMULATIONS = 3     // determines the number of accumulations it will perform before signalling done
 ) (
     input wire reset, clk, enable,
-    input wire [8 * SIZE-1:0] a,
-    input wire [7:0] b,
-    output reg [8 * SIZE-1:0] out,
+    input wire [WIDTH * SIZE-1:0] a,
+    input wire [WIDTH - 1:0] b,
+    output reg [WIDTH * SIZE-1:0] out,
     output wire done
 );
 
-    wire [8 * SIZE-1:0] cur_out;    // wire to connect MAC outputs to output register
+    wire [WIDTH * SIZE-1:0] cur_out;    // wire to connect MAC outputs to output register
     reg [$clog2(ACCUMULATIONS * 2) - 1:0] accumulation_counter;     // counter to keep track of the number of accumulations
 
     // generate SIZE MACs
@@ -25,9 +25,9 @@ module vsmac #(
                 .reset(reset),
                 .clk(clk),
                 .enable(enable),
-                .a(a[8 * i +: 8]),          // slice a
+                .a(a[WIDTH * i +: WIDTH]),  // slice a
                 .b(b),                      // b is common to all MACs
-                .out(cur_out[8 * i +: 8])   // slice out
+                .out(cur_out[WIDTH * i +: WIDTH])   // slice out
             );
         end
     endgenerate
