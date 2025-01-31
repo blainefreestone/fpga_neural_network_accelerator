@@ -30,6 +30,15 @@ module mvm #(
         .done(vsmac_done)
     );
 
+    // slices the matrix and vector to get the current values for the vector scalar multiplier
+    genvar i;
+    generate
+        for (i = 0; i < MATRIX_ROWS; i = i + 1) begin : a_b_slice_loop
+            assign a = matrix[(MATRIX_ROWS - shared_idx) * WIDTH - 1 + i * (SHARED_DIM * WIDTH) -: WIDTH];
+            assign b = vector[WIDTH * shared_idx - 1 -: WIDTH];
+        end
+    endgenerate
+
     // define states for state machine
     parameter IDLE = 2'b00;
     parameter CALCULATE = 2'b01;
