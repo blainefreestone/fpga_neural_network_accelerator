@@ -49,7 +49,7 @@ module test_mvm;
         #10;
         reset = 0;
         start = 1;
-        #10;
+        #100;
         start = 0;
         #10;
 

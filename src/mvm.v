@@ -11,7 +11,6 @@ module mvm #(
 );
 
     reg [SHARED_DIM - 1:0] shared_idx;          // keeps track of current column in the matrix and current row in the vector
-    reg [$clog2(SHARED_DIM)-1:0] acc_counter;   // keeps track of the number of accumulations done
 
     wire [SHARED_DIM * WIDTH - 1:0] a, b;   // holds values currently needed for the vector scalar multiplier
     wire vsmac_done;                        // done signal from the vector scalar multiplier
@@ -58,11 +57,11 @@ module mvm #(
     // counter logic
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            acc_counter <= 0;
+            shared_idx <= 0;
         end else if (current_state == CALCULATE) begin
-            acc_counter <= acc_counter + 1;
+            shared_idx <= shared_idx + 1;
         end else begin
-            acc_counter <= 0;
+            shared_idx <= 0;
         end
     end
 
@@ -76,7 +75,7 @@ module mvm #(
                     next_state = IDLE;
             end
             CALCULATE: begin
-                if (acc_counter == SHARED_DIM - 1)
+                if (shared_idx == SHARED_DIM - 1)
                     next_state = DONE;
                 else
                     next_state = CALCULATE;
