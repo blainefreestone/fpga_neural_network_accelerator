@@ -6,13 +6,24 @@ module mvm #(
 ) (
     input wire clk, reset, start,
     input wire [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] matrix,
-    input wire [MATRIX_ROWS - 1:0] vector,
+    input wire [SHARED_DIM * WIDTH - 1:0] vector,
     output reg [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] result_vector
 );
 
+    wire [SHARED_DIM  * WIDTH - 1:0] a, out;
+    wire [WIDTH - 1:0] b;
+
     reg [SHARED_DIM - 1:0] shared_idx;          // keeps track of current column in the matrix and current row in the vector
 
-    wire [SHARED_DIM * WIDTH - 1:0] a, b;   // holds values currently needed for the vector scalar multiplier
+    // slices the matrix and vector to get the current values for the vector scalar multiplier
+    genvar i;
+    generate
+        for (i = 0; i < MATRIX_ROWS; i = i + 1) begin : a_b_slice_loop                                                                // a and b are current values for the vector scalar multiplier
+            assign a = matrix[(((MATRIX_ROWS - shared_idx) * WIDTH) - 1) - (i * WIDTH) -: WIDTH];
+            assign b = vector[WIDTH * (SHARED_DIM - shared_idx) - 1 -: WIDTH];
+        end
+    endgenerate
+
     wire vsmac_done;                        // done signal from the vector scalar multiplier
 
     // vector scalar multiplier with proper parameters
@@ -28,15 +39,6 @@ module mvm #(
         .out(out),
         .done(vsmac_done)
     );
-
-    // slices the matrix and vector to get the current values for the vector scalar multiplier
-    genvar i;
-    generate
-        for (i = 0; i < MATRIX_ROWS; i = i + 1) begin : a_b_slice_loop
-            assign a = matrix[(MATRIX_ROWS - shared_idx) * WIDTH - 1 + i * (SHARED_DIM * WIDTH) -: WIDTH];
-            assign b = vector[WIDTH * shared_idx - 1 -: WIDTH];
-        end
-    endgenerate
 
     // define states for state machine
     parameter IDLE = 2'b00;

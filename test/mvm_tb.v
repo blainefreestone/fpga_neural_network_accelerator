@@ -3,7 +3,7 @@
 module test_mvm;
 
     // Parameters
-    localparam MATRIX_ROWS = 6;
+    localparam MATRIX_ROWS = 3;
     localparam SHARED_DIM = 3;
     localparam WIDTH = 8;
 
@@ -12,7 +12,7 @@ module test_mvm;
     reg reset;
     reg start;
     reg [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] matrix;
-    reg [MATRIX_ROWS - 1:0] vector;
+    reg [SHARED_DIM * WIDTH - 1:0] vector;
 
     // Outputs
     wire [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] result_vector;
@@ -48,11 +48,11 @@ module test_mvm;
         reset = 1;
         #10;
         reset = 0;
+        matrix = 72'h010203040506070809;
+        vector = 24'h010203;
         start = 1;
         #100;
-        start = 0;
-        #10;
-
+        $finish;
     end
 
 endmodule
