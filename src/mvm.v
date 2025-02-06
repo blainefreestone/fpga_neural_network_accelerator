@@ -21,7 +21,7 @@ module mvm #(
         .SIZE(MATRIX_ROWS),
         .WIDTH(WIDTH),
         .ACCUMULATIONS(SHARED_DIM)
-    ) u_vsm (
+    ) vsm (
         .clk(clk),
         .reset(reset),
         .a(a),
