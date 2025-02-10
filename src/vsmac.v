@@ -7,8 +7,7 @@ module vsmac #(
     input wire reset, clk, enable,
     input wire [WIDTH * SIZE-1:0] a,
     input wire [WIDTH - 1:0] b,
-    output reg [WIDTH * SIZE-1:0] out,
-    output wire done
+    output reg [WIDTH * SIZE-1:0] out
 );
 
     wire [WIDTH * SIZE-1:0] cur_out;    // wire to connect MAC outputs to output register
