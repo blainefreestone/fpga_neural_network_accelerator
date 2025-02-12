@@ -88,15 +88,23 @@ module test_mvm;
         expected_results_1[1] = 24'hA7D4FB;
         
         // Test 2: Overflow
-//        test_matrices[2] = 72'h131415161718191A1B;
-//        test_vectors[2] = 24'h070809;
-//        expected_results[2] = 24'hC4C6C8;
+        test_matrices_1[2] = 72'h131415161718191A1B;
+        test_vectors_1[2] = 24'h070809;
+        expected_results_1[2] = 24'hC4C6C8;
 
         // Test Cases for size 2
         test_matrices_2[0] = 144'h0102030405060708090A0B0C0D0E0F101112;
         test_vectors_2[0] = 32'h010203;
         expected_results_2[0] = 48'h0E2032445668;
 
+        test_matrices_2[1] = 144'h0102030405060708090A0B0C0D0E0F101112;
+        test_vectors_2[1] = 32'h010203;
+        expected_results_2[1] = 48'h0E2032445668;
+        
+        test_matrices_2[2] = 144'h0102030405060708090A0B0C0D0E0F101112;
+        test_vectors_2[2] = 32'h010203;
+        expected_results_2[2] = 48'h0E2032445668;
+        
         // Wait for global reset
         #115;
 

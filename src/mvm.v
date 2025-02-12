@@ -11,7 +11,7 @@ module mvm #(
     output reg done
 );
 
-    wire [SHARED_DIM  * WIDTH - 1:0] a, out;
+    wire [MATRIX_ROWS  * WIDTH - 1:0] a, out;
     wire [WIDTH - 1:0] b;
     
     reg enable;
@@ -25,7 +25,7 @@ module mvm #(
     genvar i;
     generate
         for (i = 0; i < MATRIX_ROWS; i = i + 1) begin : a_slice_loop
-            assign a[((SHARED_DIM - i) * WIDTH) - 1 -: WIDTH] = matrix[WIDTH * SHARED_DIM * (MATRIX_ROWS - i) - (WIDTH * shared_idx) - 1 -: WIDTH];
+            assign a[((MATRIX_ROWS - i) * WIDTH) - 1 -: WIDTH] = matrix[WIDTH * SHARED_DIM * (MATRIX_ROWS - i) - (WIDTH * shared_idx) - 1 -: WIDTH];
         end
     endgenerate
 
@@ -66,9 +66,17 @@ module mvm #(
             shared_idx <= 0;
             prop_delay_counter <= 0;
         end else if (current_state == CALCULATE) begin
-            shared_idx <= shared_idx + 1;
+            if (shared_idx == SHARED_DIM - 1) begin
+                shared_idx <= 0;
+            end else begin
+                shared_idx <= shared_idx + 1;
+            end
         end else if(current_state == DELAY) begin
-            prop_delay_counter <= prop_delay_counter + 1;
+            if (prop_delay_counter == 1) begin
+                prop_delay_counter <= 0;
+            end else begin
+                prop_delay_counter <= prop_delay_counter + 1;
+            end
         end else begin
             shared_idx <= 0;
             prop_delay_counter <= 0;
