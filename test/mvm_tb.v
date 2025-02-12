@@ -25,6 +25,9 @@ module test_mvm;
     reg [SHARED_DIM_2 * WIDTH_2 - 1:0] vector_2;
     reg [MATRIX_ROWS_3 * SHARED_DIM_3 * WIDTH_3 - 1:0] matrix_3;
     reg [SHARED_DIM_3 * WIDTH_3 - 1:0] vector_3;
+    wire done_1;
+    wire done_2;
+    wire done_3;
 
     // Outputs
     wire [MATRIX_ROWS_1 * WIDTH_1 - 1:0] result_vector_1;
@@ -42,7 +45,8 @@ module test_mvm;
         .start(start),
         .matrix(matrix_1),
         .vector(vector_1),
-        .result_vector(result_vector_1)
+        .result_vector(result_vector_1),
+        .done(done_1)
     );
 
     // Instantiate the Unit Under Test (UUT) for size 2
@@ -56,7 +60,8 @@ module test_mvm;
         .start(start),
         .matrix(matrix_2),
         .vector(vector_2),
-        .result_vector(result_vector_2)
+        .result_vector(result_vector_2),
+        .done(done_2)
     );
 
     // Instantiate the Unit Under Test (UUT) for size 3
@@ -70,7 +75,8 @@ module test_mvm;
         .start(start),
         .matrix(matrix_3),
         .vector(vector_3),
-        .result_vector(result_vector_3)
+        .result_vector(result_vector_3),
+        .done(done_3)
     );
 
     always #5 clk = ~clk;
