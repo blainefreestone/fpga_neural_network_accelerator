@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module test_mvm;
+module mvm_tb;
 
     // Parameters for different sizes
     localparam MATRIX_ROWS_1 = 3;
