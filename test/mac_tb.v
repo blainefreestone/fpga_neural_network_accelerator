@@ -6,9 +6,9 @@ module mac_tb;
     reg clk;
     reg reset;
     reg enable;
-    reg [7:0] a;
-    reg [7:0] b;
-    wire [23:0] out;
+    reg signed [7:0] a;
+    reg signed [7:0] b;
+    wire signed [23:0] out;
 
     // Instantiate the MAC module
     mac uut (
@@ -40,25 +40,25 @@ module mac_tb;
 
         // Test vector 1
         enable = 1;
-        a = 8'd15;
-        b = 8'd10;
+        a = 8'sd15;
+        b = 8'sd10;
         #10;
 
         // Test vector 2
-        a = 8'd25;
-        b = 8'd20;
+        a = 8'sd25;
+        b = 8'sd20;
         #10;
 
         // Test vector 3
         enable = 0; // Disable MAC
-        a = 8'd50;
-        b = 8'd30;
+        a = 8'sd50;
+        b = 8'sd30;
         #10;
 
         // Test vector 4
         enable = 1; // Enable MAC
-        a = 8'd100;
-        b = 8'd50;
+        a = 8'sd100;
+        b = 8'sd50;
         #10;
 
         // Apply reset
@@ -70,13 +70,13 @@ module mac_tb;
 
         // Test vector 5
         enable = 1;
-        a = 8'd200;
-        b = 8'd100;
+        a = 8'sd-100;
+        b = 8'sd-50;
         #10;
 
         // Test vector 6
-        a = 8'd255;
-        b = 8'd200;
+        a = 8'sd-128;
+        b = 8'sd127;
         #10;
 
         // Apply reset
