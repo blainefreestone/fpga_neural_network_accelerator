@@ -5,9 +5,9 @@ module vsmac #(
     parameter ACCUMULATIONS = 3     // determines the number of accumulations it will perform before signalling done
 ) (
     input wire reset, clk, enable,
-    input wire signed [WIDTH * SIZE-1:0] a,
-    input wire signed [WIDTH - 1:0] b,
-    output reg signed [WIDTH * SIZE-1:0] out
+    input wire [WIDTH * SIZE-1:0] a,
+    input wire [WIDTH - 1:0] b,
+    output reg [WIDTH * SIZE-1:0] out
 );
 
     wire signed [WIDTH * SIZE-1:0] cur_out;    // wire to connect MAC outputs to output register
