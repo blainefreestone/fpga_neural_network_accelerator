@@ -40,8 +40,8 @@ module mac_tb;
 
         // Test vector 1
         enable = 1;
-        a = 8'sd1;
-        b = 8'sd5;
+        a = 8'sb01110001;   // 0.8828125
+        b = 8'sb01010001;   // 0.6328125
         #10;
 
         // Test vector 2
