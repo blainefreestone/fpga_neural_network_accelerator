@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module test_mvm;
+module mvm_tb;
 
     // Parameters for different sizes
     localparam MATRIX_ROWS_1 = 3;
@@ -142,9 +142,9 @@ module test_mvm;
         test_vectors_3[0] = 32'h01020304;
         expected_results_3[0] = 16'h1E46;
 
-        test_matrices_3[1] = 64'h0102030405060708;
-        test_vectors_3[1] = 32'h01020304;
-        expected_results_3[1] = 16'h1E46;
+        test_matrices_3[1] = 64'h01FE03FCFC03FE01;
+        test_vectors_3[1] = 32'h01FE03FC;
+        expected_results_3[1] = 16'h1EEC;
 
         test_matrices_3[2] = 64'h0102030405060708;
         test_vectors_3[2] = 32'h01020304;

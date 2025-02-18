@@ -8,7 +8,7 @@ module mac_tb;
     reg enable;
     reg signed [7:0] a;
     reg signed [7:0] b;
-    wire signed [23:0] out;
+    wire signed [7:0] out;
 
     // Instantiate the MAC module
     mac uut (
@@ -40,50 +40,59 @@ module mac_tb;
 
         // Test vector 1
         enable = 1;
-        a = 8'sd15;
-        b = 8'sd10;
+        a = 8'sb01110001;   // 0.8828125
+        b = 8'sb01010001;   // 0.6328125
         #10;
 
         // Test vector 2
-        a = 8'sd25;
-        b = 8'sd20;
+        a = 8'sd4;
+        b = 8'sd10;
         #10;
 
         // Test vector 3
-        enable = 0; // Disable MAC
-        a = 8'sd50;
-        b = 8'sd30;
+        a = 8'sd12;
+        b = 8'sd2;
         #10;
 
         // Test vector 4
-        enable = 1; // Enable MAC
-        a = 8'sd100;
-        b = 8'sd50;
-        #10;
-
-        // Apply reset
+        a = 8'sd2;
+        b = 8'sd3;
+        #20;
+        enable = 0;
+        #40;
         reset = 1;
-        a = 0;
-        b = 0;
         #10;
         reset = 0;
 
         // Test vector 5
         enable = 1;
-        a = 8'sd-100;
-        b = 8'sd-50;
+        a = 8'sd1;
+        b = -8'sd1;
+        #10
+
+        a = -8'sd1;
+        b = 8'sd1;
         #10;
 
-        // Test vector 6
-        a = 8'sd-128;
-        b = 8'sd127;
+        a = -8'sd1;
+        b = -8'sd2;
         #10;
 
-        // Apply reset
+        a = -8'sd20;
+        b = 8'sd2;
+        #10;
+
+        a = -8'sd7;
+        b = -8'sd2;
+        #20;
+        enable = 0;
+        #40;
+        reset = 1;
+        #10;
         reset = 0;
+        #10;
 
         // Finish simulation
-        #100;
         $finish;
     end
 
