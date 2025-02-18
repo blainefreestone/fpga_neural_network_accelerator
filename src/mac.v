@@ -1,43 +1,52 @@
 // multiplier accumulator
 module mac #(
     parameter WIDTH = 8,            // determines the width of the inputs
-    parameter ACCUMULATIONS = 3     // determines the number of accumulations will fit in the output (in the worst case)
+    parameter ACCUMULATIONS = 3     // determines the number of accumulations that will fit in the output (in the worst case)
 ) (
     input wire reset, clk, enable,
     input wire signed [WIDTH - 1:0] a, b,
     output reg signed [WIDTH - 1:0] out    // the output width is the sum of the input widths plus extra bits for accumulations
 );
     wire signed [2 * WIDTH:0] product;                                  // stores the product of a and b
-    reg signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] sum_reg;          // stores the output of the sum
-    wire signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] quantize_in;     // wire to connect quantizer input to the output register
-    wire signed [WIDTH - 1:0] quantize_out;                                // wire to connect quantizer output to the output register
+    reg signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] sum_reg;       // stores the accumulated sum
+    wire signed [WIDTH - 1:0] relu_in;                                  // wire to connect the clamp output to the relu input
+    wire signed [WIDTH - 1:0] relu_out;                                 // wire to connect the relu output to the output register
+    wire signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] clamp_in;     // wire to connect clamp input to the sum_reg
+    wire signed [WIDTH - 1:0] clamp_out;                                // wire to connect clamp output to the relu input
 
     // calculate the product of a and b
     assign product = a * b;
 
-    // connect quantizer input to the sum
-    assign quantize_in = sum_reg;
-    
-    // instantiate the quantizer
-    quantize #(
+    // connect clamp input to the sum
+    assign clamp_in = sum_reg;
+
+    // instantiate the clamp and relu modules
+    clamp #(
         .WIDTH_IN(2 * WIDTH + $clog2(ACCUMULATIONS)),
         .WIDTH_OUT(WIDTH)
-    ) quantizer (
-        .in(quantize_in),
-        .out(quantize_out)
+    ) clamp_inst (
+        .in(clamp_in),
+        .out(clamp_out)
+    );
+
+    relu #(
+        .WIDTH(WIDTH)
+    ) relu_inst (
+        .in(clamp_out),
+        .out(out)
     );
 
     // sequential logic for accumulation and output
     always @(posedge clk or posedge reset) begin
         if (reset) begin
-            // reset the output and the product register
+            // reset the accumulated sum and the output register
             sum_reg <= 0;
             out <= 0;
         end else if (enable) begin
-            // calculate the product and add it to the existing output
+            // calculate the product and add it to the existing sum
             sum_reg <= sum_reg + product;
-            // quantize the output
-            out <= quantize_out;
+            // pass the clamped output through the relu and assign to output
+            out <= relu_out;
         end
     end
 
