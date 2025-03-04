@@ -1,21 +1,21 @@
 // multiplier accumulator
 module mac #(
     parameter WIDTH = 8,            // determines the width of the inputs
-    parameter ACCUMULATIONS = 3     // determines the number of accumulations that will fit in the output (in the worst case)
+    parameter ACCUMULATIONS = 3,    // determines the number of accumulations that will fit in the output (in the worst case)
+    parameter INT_BITS = 2
 ) (
     input wire reset, clk, enable,
     input wire signed [WIDTH - 1:0] a, b,
     output reg signed [WIDTH - 1:0] out    // the output width is the sum of the input widths plus extra bits for accumulations
 );
+    parameter FRAC_BITS = WIDTH - INT_BITS;
     wire signed [2 * WIDTH:0] product;                                  // stores the product of a and b
     reg signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] sum_reg;       // stores the accumulated sum
-    wire signed [WIDTH - 1:0] relu_in;                                  // wire to connect the clamp output to the relu input
     wire signed [WIDTH - 1:0] relu_out;                                 // wire to connect the relu output to the output register
     wire signed [2 * WIDTH + $clog2(ACCUMULATIONS) - 1:0] clamp_in;     // wire to connect clamp input to the sum_reg
     wire signed [WIDTH - 1:0] clamp_out;                                // wire to connect clamp output to the relu input
 
-    // calculate the product of a and b
-    assign product = a * b;
+    assign product = (a * b) >>> FRAC_BITS;
 
     // connect clamp input to the sum
     assign clamp_in = sum_reg;
@@ -33,7 +33,7 @@ module mac #(
         .WIDTH(WIDTH)
     ) relu_inst (
         .in(clamp_out),
-        .out(out)
+        .out(relu_out)
     );
 
     // sequential logic for accumulation and output

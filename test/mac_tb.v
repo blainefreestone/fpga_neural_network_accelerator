@@ -38,67 +38,81 @@ module mac_tb;
         #10;
         reset = 0;
 
+        // Test 1 (basic floating point multiplication and accumulation)
         // Test vector 1
         enable = 1;
-        a = 8'sb01110001;   // 0.8828125
-        b = 8'sb01010001;   // 0.6328125
+        a = 8'sb00010101;   // 0.328125
+        b = 8'sb00101010;   // 0.65625
         #10;
 
         // Test vector 2
-        a = 8'sd4;
-        b = 8'sd10;
+        a = 8'sb00100001;   // 0.515625
+        b = 8'sb00101010;   // 0.65625
         #10;
 
         // Test vector 3
-        a = 8'sd12;
-        b = 8'sd2;
-        #10;
+        a = 8'sb00010000;   // 0.25
+        b = 8'sb00101010;   // 0.65625
+        $display("Test 1, Vector 1: output = %b, expected = 00001101, %s", out, (out == 8'sb00001101) ? "PASS" : "FAIL");
 
-        // Test vector 4
-        a = 8'sd2;
-        b = 8'sd3;
-        #20;
-        enable = 0;
-        #40;
+        #10;
+        $display("Test 1, Vector 2: output = %b, expected = 00100010, %s", out, (out == 8'sb00100010) ? "PASS" : "FAIL");
+
+        #10;
+        $display("Test 1, Vector 3: output = %b, expected = 00101100, %s", out, (out == 8'sb00101100) ? "PASS" : "FAIL");
+
+        // Apply reset
+        #10;
         reset = 1;
         #10;
         reset = 0;
 
-        // Test vector 5
-        enable = 1;
-        a = 8'sd1;
-        b = -8'sd1;
-        #10
-
-        a = -8'sd1;
-        b = 8'sd1;
+        // Test 2 (negative clamping)
+        // Test vector 1
+        a = 8'sb00001100;   // 0.1875
+        b = 8'sb00000010;   // 0.03125
         #10;
 
-        a = -8'sd1;
-        b = -8'sd2;
+        // Test vector 2
+        a = 8'sb00001100;   // 0.1875
+        b = 8'sb11000000;   // -1.0
         #10;
 
-        a = -8'sd20;
-        b = 8'sd2;
-        #10;
+        // Test vector 3
+        a = 8'sb00001100;   // 0.1875
+        b = 8'sb01111111;   // 1.984375
+        $display("Test 2, Vector 1: output = %b, expected = 00000000, %s", out, (out == 8'sb00000000) ? "PASS" : "FAIL");
 
-        a = -8'sd7;
-        b = -8'sd2;
-        #20;
-        enable = 0;
-        #40;
+        #10;
+        $display("Test 2, Vector 2: output = %b, expected = 00000000, %s", out, (out == 8'sb00000000) ? "PASS" : "FAIL");
+
+        #10;
+        $display("Test 2, Vector 3: output = %b, expected = 00001011, %s", out, (out == 8'sb00001011) ? "PASS" : "FAIL");
+
+        // Apply reset
+        #10;
         reset = 1;
         #10;
         reset = 0;
+
+        // Test 3 (positive clamping)
+        // Test vector 1, 2, and 3
+        a = 8'sb01000000;   // 1.0
+        b = 8'sb00110000;   // 0.75
         #10;
+
+        #10;
+
+        $display("Test 3, Vector 1: output = %b, expected = 00110000, %s", out, (out == 8'sb00110000) ? "PASS" : "FAIL");
+        #10;
+
+        $display("Test 3, Vector 2: output = %b, expected = 01100000, %s", out, (out == 8'sb01100000) ? "PASS" : "FAIL");
+        #10;
+
+        $display("Test 3, Vector 3: output = %b, expected = 01111111, %s", out, (out == 8'sb01111111) ? "PASS" : "FAIL");
 
         // Finish simulation
         $finish;
-    end
-
-    // Monitor the output
-    initial begin
-        $monitor("At time %t, a = %d, b = %d, out = %d, enable = %b", $time, a, b, out, enable);
     end
 
 endmodule
