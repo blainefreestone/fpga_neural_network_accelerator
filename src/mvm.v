@@ -2,7 +2,8 @@
 module mvm #(
     parameter MATRIX_ROWS = 6,      // determines the number of ROWS in the matrix
     parameter SHARED_DIM = 3,       // determines the number of columns in the matrix and rows in the vector
-    parameter WIDTH = 8             // determines the width of data inside the matrix and the vector
+    parameter WIDTH = 8,            // determines the width of data inside the matrix and the vector
+    parameter INT_BITS = 2          // determines the number of integer bits in the inputs
 ) (
     input wire clk, reset, start,
     input wire [MATRIX_ROWS * SHARED_DIM * WIDTH - 1:0] matrix,
@@ -32,7 +33,8 @@ module mvm #(
     vsmac #(
         .SIZE(MATRIX_ROWS),
         .WIDTH(WIDTH),
-        .ACCUMULATIONS(SHARED_DIM)
+        .ACCUMULATIONS(SHARED_DIM),
+        .INT_BITS(INT_BITS)
     ) vsm (
         .clk(clk),
         .reset(reset),

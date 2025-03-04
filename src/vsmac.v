@@ -2,7 +2,8 @@
 module vsmac #(
     parameter SIZE = 6,             // determines the number of inputs (and in turn the number of MACs)
     parameter WIDTH = 8,            // determines the width of the inputs
-    parameter ACCUMULATIONS = 3     // determines the number of accumulations it will perform before signalling done
+    parameter ACCUMULATIONS = 3,    // determines the number of accumulations it will perform before signalling done
+    parameter INT_BITS = 2          // determines the number of integer bits in the inputs
 ) (
     input wire reset, clk, enable,
     input wire [WIDTH * SIZE-1:0] a,
@@ -18,7 +19,8 @@ module vsmac #(
         for (i = 0; i < SIZE; i = i + 1) begin : mac_gen
             mac #(
                 .WIDTH(WIDTH),
-                .ACCUMULATIONS(ACCUMULATIONS)
+                .ACCUMULATIONS(ACCUMULATIONS),
+                .INT_BITS(INT_BITS)
             ) mac_i (
                 .reset(reset),
                 .clk(clk),
